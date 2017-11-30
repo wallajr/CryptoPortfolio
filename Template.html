@@ -48,6 +48,12 @@
 			</div>
 		</div>
 
+		<!-- Loads Tokens, Example File:
+		var coinJSON = '{"assets":[' +
+		'{"symbol":"ETH","numberOfTokens":"1" },' +
+		'{"symbol":"LTC","numberOfTokens":"1" }]}';
+		-->
+		<script src="Portfolio.json"></script>
 		<!-- https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,BTC -->
 		<script>
 			var coinsCompleted = 0;
@@ -81,16 +87,7 @@
 			}
 		});
 	}
-
 		  $(document).ready(function(){
-
-				var coinJSON = '{"assets":[' +
-				'{"symbol":"ETH","numberOfTokens":"1" },' +
-				'{"symbol":"BTC","numberOfTokens":"1" },' +
-				'{"symbol":"NEO","numberOfTokens":"1" },' +
-				'{"symbol":"ARK","numberOfTokens":"1" },' +
-				'{"symbol":"STRAT","numberOfTokens":"1" },' +
-				'{"symbol":"LTC","numberOfTokens":"1" }]}';
 
 				var coins = JSON.parse(coinJSON);
 
@@ -100,10 +97,7 @@
 						var coin = coins[key][i]
 						BuildCoinValueTable(coin, coins[key].length, tableBodyHtml);
 							}
-
 					}
-
-
 		  });
 		</script>
 	</body>
