@@ -74,7 +74,7 @@
 						var btcValue = data.BTC * coin.numberOfTokens;
 						totalUSD = totalUSD + usdValue;
 						totalBTC = totalBTC + btcValue;
-						tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td>" + coin.numberOfTokens + "</td><td>" + (data.USD).toFixed(2) + "</td><td>" + usdValue.toFixed(2) + "</td><td>" + btcValue + "</td></tr>");
+						tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td>" + coin.numberOfTokens + "</td><td>" + (data.USD).toFixed(data.USD < '0.01' ? 6 : 2) + "</td><td>" + usdValue.toFixed(2) + "</td><td>" + btcValue + "</td></tr>");
 						coinsCompleted = coinsCompleted + 1;
 
 						if(coinsCompleted == numberOfCoins){
@@ -84,13 +84,13 @@
 							$("#Totals_Row td:nth-child(5)").html(totalBTC);
 							$('#crypto').DataTable({ "pagingType": "full_numbers" });
 						}
+					}
+				});
 			}
-		});
-	}
+
 		  $(document).ready(function(){
-
 				var coins = JSON.parse(coinJSON);
-
+				
 				for (var key in coins) {
 					var tableBodyHtml = [];
 					for (i = 0; i < coins[key].length; i++) {
