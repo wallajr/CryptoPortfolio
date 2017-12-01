@@ -24,10 +24,10 @@
 				  <thead>
 					<tr>
 					  <th>Coin</th>
-					  <th>Tokens Owned</th>
-					  <th>USD Per Token</hd>
-					  <th>USD Value</th>
-					  <th>BTC Value</th>
+					  <th style="text-align: right">Tokens Owned</th>
+					  <th style="text-align: right">USD Per Token</th>
+					  <th style="text-align: right">USD Value</th>
+					  <th style="text-align: right">BTC Value</th>
 					</tr>
 				  </thead>
 				  <tbody>
@@ -38,8 +38,8 @@
 					  <td>Total</td>
 					  <td></td>
 					  <td></td>
-					  <td></td>
-					  <td></td>
+					  <td style="text-align: right"></td>
+					  <td style="text-align: right"></td>
 					</tr>
 				  </tfoot>
 				</table>
@@ -54,50 +54,59 @@
 		'{"symbol":"LTC","numberOfTokens":"1" }]}';
 		-->
 		<script src="Portfolio.json"></script>
-		<!-- https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,BTC -->
 		<script>
-			var coinsCompleted = 0;
-			var totalUSD = 0;
-			var totalBTC = 0;
+			/*
+					Builds the URL for retrieving the basic pricing informtion for the coins in your portfolio
+			    Example URL: https://min-api.cryptocompare.com/data/pricemulti?fsyms=ETH,DASH&tsyms=BTC,USD
+			*/
+			function BuildPricingInformationURL(coins){
+				var tokenSybmols = '';
+				var tableBodyHtml = [];
 
-			function BuildCoinValueTable(coin, numberOfCoins, tableBodyHtml){
-				var url = "https://min-api.cryptocompare.com/data/price?fsym=" + coin.symbol + "&tsyms=USD,BTC";
-
-				$.ajax({
-					type: 'GET',
-					url: url,
-					async: true,
-					dataType: 'json',
-					success: function (data) {
-						var coinId = "#" + coin.symbol + "_Row";
-						var usdValue = data.USD *  coin.numberOfTokens;
-						var btcValue = data.BTC * coin.numberOfTokens;
-						totalUSD = totalUSD + usdValue;
-						totalBTC = totalBTC + btcValue;
-						tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td>" + coin.numberOfTokens + "</td><td>" + (data.USD).toFixed(data.USD < '0.01' ? 6 : 2) + "</td><td>" + usdValue.toFixed(2) + "</td><td>" + btcValue + "</td></tr>");
-						coinsCompleted = coinsCompleted + 1;
-
-						if(coinsCompleted == numberOfCoins){
-							//Insert Body and Totals
-							$("#crypto tbody").append(tableBodyHtml);
-							$("#Totals_Row td:nth-child(4)").html("$" + totalUSD.toFixed(2));
-							$("#Totals_Row td:nth-child(5)").html(totalBTC);
-							$('#crypto').DataTable({ "pagingType": "full_numbers" });
+				// Iterates over your coins to build a list of coin symbols to be used in the api call
+				for (i = 0; i < coins["assets"].length; i++) {
+					var coin = coins["assets"][i]
+					tokenSybmols += i == 0 ? coin.symbol : ',' + coin.symbol;
 						}
-					}
-				});
+
+				return 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=' + tokenSybmols + '&tsyms=BTC,USD';
+			}
+
+			/*
+					Build the baic pricing table using the pricing information return by the api + the coins in your portfolio
+			*/
+			function BuildCoinValueTable(coins, coinsPricing){
+				var totalUSD = 0;
+				var totalBTC = 0;
+				var tableBodyHtml = [];
+
+				// Iterates over your coins, combining your personal coin information with the returned pricing information
+				// to create the basic pricing information table
+				for (i = 0; i < coins["assets"].length; i++) {
+					var coin = coins["assets"][i]
+					var coinId = "#" + coin.symbol + "_Row";
+					var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
+					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
+
+					totalUSD += usdValue;
+					totalBTC += totalBTC + btcValue;
+
+					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + '$' + (usdValue).toFixed(usdValue < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + '$' + usdValue.toFixed(2) + "</td><td style='text-align: right'>" + btcValue + "</td></tr>");
+				 }
+
+					//Insert Body and Totals
+					$("#crypto tbody").append(tableBodyHtml);
+					$("#Totals_Row td:nth-child(4)").html("$" + totalUSD.toFixed(2));
+					$("#Totals_Row td:nth-child(5)").html(totalBTC);
+					$('#crypto').DataTable({ "pagingType": "full_numbers" });
 			}
 
 		  $(document).ready(function(){
 				var coins = JSON.parse(coinJSON);
-				
-				for (var key in coins) {
-					var tableBodyHtml = [];
-					for (i = 0; i < coins[key].length; i++) {
-						var coin = coins[key][i]
-						BuildCoinValueTable(coin, coins[key].length, tableBodyHtml);
-							}
-					}
+				var url = BuildPricingInformationURL(coins);
+				$.get(url, function(data, status){
+						BuildCoinValueTable(coins, data);
+					});
 		  });
 		</script>
 	</body>
