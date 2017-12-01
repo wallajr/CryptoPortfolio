@@ -89,7 +89,7 @@
 					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
 
 					totalUSD += usdValue;
-					totalBTC += totalBTC + btcValue;
+					totalBTC += btcValue;
 				}
 
 
@@ -103,13 +103,18 @@
 					var percentOfTotalValue =  usdValue/totalUSD*100;
 					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
 					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
-				 }
+				}
 
-					//Insert Body and Totals
-					$("#crypto tbody").append(tableBodyHtml);
-					$("#Totals_Row td:nth-child(4)").html("$" + totalUSD.toFixed(2));
-					$("#Totals_Row td:nth-child(5)").html(totalBTC);
-					$('#crypto').DataTable({ "pagingType": "full_numbers" });
+				//Insert Body and Totals
+				$("#crypto tbody").append(tableBodyHtml);
+				$("#Totals_Row td:nth-child(4)").html("$" + totalUSD.toFixed(2));
+				$("#Totals_Row td:nth-child(5)").html(totalBTC);
+				$('#crypto').DataTable({ 
+					"pagingType": "full_numbers",
+					// Default is 10 rows per page. Add a pageLength variable to Portfolio.json to 
+					// set a custom page length. (Eg. var pageLength = 25;)
+					"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
+				});
 			}
 
 		  $(document).ready(function(){
