@@ -91,7 +91,7 @@
 					totalUSD += usdValue;
 					totalBTC += totalBTC + btcValue;
 
-					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + '$' + (usdValue).toFixed(usdValue < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + '$' + usdValue.toFixed(2) + "</td><td style='text-align: right'>" + btcValue + "</td></tr>");
+					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + '$' + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + '$' + usdValue.toFixed(2) + "</td><td style='text-align: right'>" + btcValue + "</td></tr>");
 				 }
 
 					//Insert Body and Totals
