@@ -28,6 +28,7 @@
 					  <th style="text-align: right">USD Per Token</th>
 					  <th style="text-align: right">USD Value</th>
 					  <th style="text-align: right">BTC Value</th>
+						<th style="text-align: right">% of Total Value</th>
 					</tr>
 				  </thead>
 				  <tbody>
@@ -80,6 +81,18 @@
 				var totalBTC = 0;
 				var tableBodyHtml = [];
 
+				// Iterates over you coins, calculating the total values of your portfolio in btc and usd.
+				// This is done separately in order to allow for percent of value to be calculated when building the html table.
+				for (i = 0; i < coins["assets"].length; i++) {
+					var coin = coins["assets"][i];
+					var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
+					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
+
+					totalUSD += usdValue;
+					totalBTC += totalBTC + btcValue;
+				}
+
+
 				// Iterates over your coins, combining your personal coin information with the returned pricing information
 				// to create the basic pricing information table
 				for (i = 0; i < coins["assets"].length; i++) {
@@ -87,11 +100,9 @@
 					var coinId = "#" + coin.symbol + "_Row";
 					var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
 					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
-
-					totalUSD += usdValue;
-					totalBTC += totalBTC + btcValue;
-
-					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + '$' + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + '$' + usdValue.toFixed(2) + "</td><td style='text-align: right'>" + btcValue + "</td></tr>");
+					var percentOfTotalValue =  usdValue/totalUSD*100;
+					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
+					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
 				 }
 
 					//Insert Body and Totals
