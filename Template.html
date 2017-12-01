@@ -3,6 +3,7 @@
 	<head>
 		<title>Crypto Portfolio</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="favicon-bitcoin.ico" type="image/x-icon">
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
@@ -12,6 +13,10 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 		<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+		<style>
+			tfoot { font-weight: bold;}
+		</style>
 	</head>
 	<body>
 		<div class="container">
@@ -19,32 +24,41 @@
 
 			<div class="row">
 			  <div class="col-sm-12">
-				 <div class="table-responsive">
-				  <table id="crypto" class="table table-hover">
-				  <thead>
-					<tr>
-					  <th>Coin</th>
-					  <th style="text-align: right">Tokens Owned</th>
-					  <th style="text-align: right">USD Per Token</th>
-					  <th style="text-align: right">USD Value</th>
-					  <th style="text-align: right">BTC Value</th>
-						<th style="text-align: right">% of Total Value</th>
-					</tr>
-				  </thead>
-				  <tbody>
-						<!-- Rows to be added dynamically -->
-				  </tbody>
-				  <tfoot>
-					<tr id="Totals_Row">
-					  <td>Total</td>
-					  <td></td>
-					  <td></td>
-					  <td style="text-align: right"></td>
-					  <td style="text-align: right"></td>
-					</tr>
-				  </tfoot>
-				</table>
-				</div>
+					<div class="table-responsive">
+				  	<table id="crypto" class="table table-hover">
+				  		<thead>
+								<tr>
+									<th>Coin</th>
+									<th style="text-align: right">Tokens Owned</th>
+									<th style="text-align: right">USD Per Token</th>
+									<th style="text-align: right">USD Value</th>
+									<th style="text-align: right">BTC Value</th>
+									<th style="text-align: right">% of Total Value</th>
+								</tr>
+							</thead>
+				  		<tbody>
+								<!-- Rows to be added dynamically -->
+				  		</tbody>
+							<tfoot>
+								<tr id="Totals_Row">
+									<td>Total</td>
+									<td></td>
+									<td></td>
+									<td style="text-align: right"></td>
+									<td style="text-align: right"></td>
+									<td></td>
+								</tr>
+								<tr id="Investments_Row">
+									<td>Investments</td>
+									<td></td>
+									<td style="text-align: right">Total</td>
+									<td style="text-align: right"></td>
+									<td style="text-align: right">ROI</td>
+									<td style="text-align: right"></td>
+								</tr>	
+							</tfoot>
+						</table>
+					</div>
 			  </div>
 			</div>
 		</div>
@@ -105,10 +119,20 @@
 					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
 				}
 
+				// Optional ROI calculation. 
+				// Set totalInvestment variable in Portfolio.json (eg. var totalInvestment = 100;)
+				var roi = typeof totalInvestment !== 'undefined' ? (((totalUSD / totalInvestment) - 1) * 100) : 'empty';
+
 				//Insert Body and Totals
 				$("#crypto tbody").append(tableBodyHtml);
 				$("#Totals_Row td:nth-child(4)").html("$" + totalUSD.toFixed(2));
 				$("#Totals_Row td:nth-child(5)").html(totalBTC);
+				if (roi === 'empty'){
+					$("#Investments_Row").hide();
+				}else{
+					$("#Investments_Row td:nth-child(4)").html("$" + totalInvestment.toFixed(2));
+					$("#Investments_Row td:nth-child(6)").html(roi.toFixed(2) + '%');
+				}
 				$('#crypto').DataTable({ 
 					"pagingType": "full_numbers",
 					// Default is 10 rows per page. Add a pageLength variable to Portfolio.json to 
@@ -121,8 +145,8 @@
 				var coins = JSON.parse(coinJSON);
 				var url = BuildPricingInformationURL(coins);
 				$.get(url, function(data, status){
-						BuildCoinValueTable(coins, data);
-					});
+					BuildCoinValueTable(coins, data);
+				});
 		  });
 		</script>
 	</body>
