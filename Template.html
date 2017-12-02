@@ -4,6 +4,7 @@
 		<title>Crypto Portfolio</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="shortcut icon" href="favicon-bitcoin.ico" type="image/x-icon">
+		<link href="favicon-bitcoin.ico" rel="shortcut icon">
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
@@ -55,7 +56,7 @@
 									<td style="text-align: right"></td>
 									<td style="text-align: right">ROI</td>
 									<td style="text-align: right"></td>
-								</tr>	
+								</tr>
 							</tfoot>
 						</table>
 					</div>
@@ -119,7 +120,7 @@
 					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
 				}
 
-				// Optional ROI calculation. 
+				// Optional ROI calculation.
 				// Set totalInvestment variable in Portfolio.json (eg. var totalInvestment = 100;)
 				var roi = typeof totalInvestment !== 'undefined' ? (((totalUSD / totalInvestment) - 1) * 100) : 'empty';
 
@@ -133,9 +134,9 @@
 					$("#Investments_Row td:nth-child(4)").html("$" + totalInvestment.toFixed(2));
 					$("#Investments_Row td:nth-child(6)").html(roi.toFixed(2) + '%');
 				}
-				$('#crypto').DataTable({ 
+				$('#crypto').DataTable({
 					"pagingType": "full_numbers",
-					// Default is 10 rows per page. Add a pageLength variable to Portfolio.json to 
+					// Default is 10 rows per page. Add a pageLength variable to Portfolio.json to
 					// set a custom page length. (Eg. var pageLength = 25;)
 					"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
 				});
