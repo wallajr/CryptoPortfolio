@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Trends</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" href="favicon-bitcoin.ico" type="image/x-icon">
+		<link href="favicon-bitcoin.ico" rel="shortcut icon">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
+
+		<style>
+			tfoot { font-weight: bold;}
+			/* make debit amounts show up in red */
+			td[data-monetary-amount^="-"]:after {
+				color: red;
+			}
+			/* make debit amounts show up in red */
+			td[data-monetary-amount^="+"]:after {
+				color: #093;
+			}
+		</style>
+	</head>
+
+    <body>
+			<div class="container">
+				<h1>Trends</h1>
+
+				<div class="row">
+				  <div class="col-sm-12">
+						<div class="table-responsive">
+					  	<table id="crypto" class="table table-hover">
+					  		<thead>
+									<tr>
+										<th>Coin</th>
+										<th style="text-align: right">1 Hour</th>
+										<th style="text-align: right">6 Hour</th>
+										<th style="text-align: right">12 Hour</th>
+										<th style="text-align: right">24 Hour</th>
+										<!--<th style="text-align: right">7 Days</th>-->
+									</tr>
+								</thead>
+					  		<tbody>
+									<!-- Rows to be added dynamically -->
+					  		</tbody>
+							</table>
+						</div>
+				  </div>
+				</div>
+			</div>
+			<script src="Portfolio.json"></script>
+			<script>
+			//TODO Refactor
+			//TODO Add green and red font for positive and negative percents
+			//TODO Add 7 days percent
+			//TODO Add 30 days percent
+			//TODO Add Comments
+
+				var coinsCompleted = 0;
+
+				function buildHourlySection(coin, numberOfCoins, tableBodyHtml){
+					var url = 'https://min-api.cryptocompare.com/data/histominute?fsym=' + coin.symbol + '&tsym=USD&limit=1440&aggregate=1'
+					$.get(url, function(data, status){
+
+						//TODO Build function to calculate and store in object
+						var twentyFourHoursAgoPrice = data.Data[0].open;
+						var twelveHoursAgoPrice = data.Data[719].open;
+						var sixHoursAgoPrice = data.Data[1079].open;
+						var oneHourAgoPrice = data.Data[1379].open;
+						//IDEA Do we use exact time stamp for current price in 7 days and 30 days ago or do we just round? histohour always uses the minutes :00 eg 1:00PM or 4:00AM
+						var currentPrice = data.Data[1439].open
+						var lastHourPercent = ((currentPrice/oneHourAgoPrice)-1) * 100;
+						var lastSixHoursPercent = ((currentPrice/sixHoursAgoPrice)-1) * 100;
+						var lastTwelveHoursPercent = ((currentPrice/twelveHoursAgoPrice)-1) * 100;
+						var lastTwentyFourHoursPercent = ((currentPrice/twentyFourHoursAgoPrice)-1) * 100;
+
+						tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + lastHourPercent + "%</td><td style='text-align: right'>" + lastSixHoursPercent + "%</td><td style='text-align: right'>" + lastTwelveHoursPercent + "%</td>" +
+						"<td style='text-align: right'>" + lastTwentyFourHoursPercent + "%</td></tr>");
+
+						coinsCompleted += 1;
+
+						//TODO Will have to get moved if other ajax calls come afterwards (histohour to be used for 7 days and 30 days ago)
+						if(coinsCompleted == numberOfCoins){
+							//Insert Body and DataTable Functionality
+	 						$("#crypto tbody").append(tableBodyHtml);
+							$('#crypto').DataTable({
+								"pagingType": "full_numbers",
+								// Default is 10 rows per page. Add a pageLength variable to Portfolio.json to
+								// set a custom page length. (Eg. var pageLength = 25;)
+								"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
+							});
+						 }
+					});
+				}
+
+				$(document).ready(function(){
+					var coins = JSON.parse(coinJSON);
+					var tableBodyHtml = [];
+					//Use histominute for hours 1-24
+					//1440 minutes in 24 hours
+					for (i = 0; i < coins["assets"].length; i++) {
+						var coin = coins["assets"][i];
+						buildHourlySection(coin, coins["assets"].length, tableBodyHtml);
+					}
+				});
+			</script>
+    </body>
