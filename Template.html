@@ -20,11 +20,26 @@
 		</style>
 	</head>
 	<body>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">Crypto Portfolio</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active"><a href="#">My Portfolio</a></li>
+						<li><a href="Trends.html">Trends</a></li>
+					</ul>
+				</div><!-- /.navbar-collapse -->
+			</div><!-- /.container-fluid -->
+		</nav>
+
 		<div class="container">
 			<h1>Crypto Portfolio</h1>
 
 			<div class="row">
-			  <div class="col-sm-12">
+			  	<div class="col-sm-12">
 					<div class="table-responsive">
 				  	<table id="crypto" class="table table-hover">
 				  		<thead>
@@ -60,7 +75,7 @@
 							</tfoot>
 						</table>
 					</div>
-			  </div>
+			  	</div>
 			</div>
 		</div>
 
@@ -142,13 +157,13 @@
 				});
 			}
 
-		  $(document).ready(function(){
+		  	$(document).ready(function(){
 				var coins = JSON.parse(coinJSON);
 				var url = BuildPricingInformationURL(coins);
 				$.get(url, function(data, status){
 					BuildCoinValueTable(coins, data);
 				});
-		  });
+		  	});
 		</script>
 	</body>
 </html>
