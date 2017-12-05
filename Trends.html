@@ -95,8 +95,8 @@
 					var lastTwelveHoursPercent = ((currentPrice/twelveHoursAgoPrice)-1) * 100;
 					var lastTwentyFourHoursPercent = ((currentPrice/twentyFourHoursAgoPrice)-1) * 100;
 
-					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + lastHourPercent + "%</td><td style='text-align: right'>" + lastSixHoursPercent + "%</td><td style='text-align: right'>" + lastTwelveHoursPercent + "%</td>" +
-					"<td style='text-align: right'>" + lastTwentyFourHoursPercent + "%</td></tr>");
+					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + lastHourPercent.toFixed(2) + "%</td><td style='text-align: right'>" + lastSixHoursPercent.toFixed(2) + "%</td><td style='text-align: right'>" + lastTwelveHoursPercent.toFixed(2) + "%</td>" +
+					"<td style='text-align: right'>" + lastTwentyFourHoursPercent.toFixed(2) + "%</td></tr>");
 
 					coinsCompleted += 1;
 
