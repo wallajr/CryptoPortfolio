@@ -88,12 +88,12 @@
 
 						tableBodyHtml.push(
 							"<tr><td>" + coin.symbol + "</td>" + 
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[718].open) + "%</td>" + 
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[713].open) + "%</td>" + 
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[707].open) + "%</td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[695].open) + "%</td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[551].open) + "%</td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[0].open) + "%</td></tr>");
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[718].open) + "%</td>" + // 1 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[713].open) + "%</td>" + // 6 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[707].open) + "%</td>" + // 12 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[695].open) + "%</td>" + // 24 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[551].open) + "%</td>" + // 7 day
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[0].open) + "%</td></tr>"); // 30 day
 
 						coinsBuilt++;
 
@@ -117,12 +117,12 @@
 
 						tableBodyHtml.push(
 							"<tr><td>" + coin.symbol + "</td>" + 
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1379].open) + "%</td>" + 
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1079].open) + "%</td>" + 
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[719].open) + "%</td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[0].open) + "%</td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, hourData[0].Data[551].open) + "%</td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, hourData[0].Data[0].open) + "%</td></tr>");
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1379].open) + "%</td>" + // 1 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1079].open) + "%</td>" + // 6 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[719].open) + "%</td>" + // 12 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[0].open) + "%</td>" + // 24 hour
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, hourData[0].Data[551].open) + "%</td>" + // 7 day
+							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, hourData[0].Data[0].open) + "%</td></tr>"); //30 day
 
 						coinsBuilt++;
 
