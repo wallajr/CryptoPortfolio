@@ -1,0 +1,9 @@
+tfoot { font-weight: bold;}
+/* make debit amounts show up in red */
+td[data-monetary-amount^="-"]:after {
+    color: red;
+}
+/* make debit amounts show up in red */
+td[data-monetary-amount^="+"]:after {
+    color: #093;
+}

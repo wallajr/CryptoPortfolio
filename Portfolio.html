@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="shortcut icon" href="favicon-bitcoin.ico" type="image/x-icon">
 		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="Site.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
 		<!-- jQuery library -->
@@ -13,10 +14,6 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 		<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
-
-		<style>
-			tfoot { font-weight: bold;}
-		</style>
 	</head>
 	<body>
 		<nav class="navbar navbar-default">
@@ -83,10 +80,10 @@
 		'{"symbol":"ETH","numberOfTokens":"1" },' +
 		'{"symbol":"LTC","numberOfTokens":"1" }]}';
 		-->
-		<script src="Portfolio.json"></script>
+		<script src="config.js"></script>
 		<script>
 			/*
-					Builds the URL for retrieving the basic pricing informtion for the coins in your portfolio
+				Builds the URL for retrieving the basic pricing informtion for the coins in your portfolio
 			    Example URL: https://min-api.cryptocompare.com/data/pricemulti?fsyms=ETH,DASH&tsyms=BTC,USD
 			*/
 			function BuildPricingInformationURL(coins){
@@ -134,23 +131,23 @@
 					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
 				}
 
-				// Optional ROI calculation.
-				// Set totalInvestment variable in Portfolio.json (eg. var totalInvestment = 100;)
-				var roi = typeof totalInvestment !== 'undefined' ? (((totalUSD / totalInvestment) - 1) * 100) : 'empty';
-
 				//Insert Body and Totals
 				$("#crypto tbody").append(tableBodyHtml);
 				$("#Totals_Row td:nth-child(4)").html("$" + totalUSD.toFixed(2));
 				$("#Totals_Row td:nth-child(5)").html(totalBTC);
-				if (roi === 'empty'){
-					$("#Investments_Row").hide();
-				}else{
+				// Optional ROI calculation.
+				// Set totalInvestment variable in config.js (eg. var totalInvestment = 100;)
+				if (typeof totalInvestment !== 'undefined'){
+					var roi = (((totalUSD / totalInvestment) - 1) * 100);
 					$("#Investments_Row td:nth-child(4)").html("$" + totalInvestment.toFixed(2));
 					$("#Investments_Row td:nth-child(6)").html(roi.toFixed(2) + '%');
+				}else{
+					$("#Investments_Row").hide();
 				}
 				$('#crypto').DataTable({
 					"pagingType": "full_numbers",
-					// Default is 10 rows per page. Add a pageLength variable to Portfolio.json to
+					"order": [[ 3, "desc" ]],
+					// Default is 10 rows per page. Add a pageLength variable to config.js to
 					// set a custom page length. (Eg. var pageLength = 25;)
 					"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
 				});
