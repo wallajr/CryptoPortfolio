@@ -88,7 +88,7 @@
 						currentPrice = data.Data[719].open;
 
 						tableBodyHtml.push(
-							"<tr><td>" + coin.symbol + "</td>" +
+							"<tr><td><a href= '" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[718].open) + "%</td>" + // 1 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[713].open) + "%</td>" + // 6 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[707].open) + "%</td>" + // 12 hour
@@ -117,7 +117,7 @@
 						currentPrice = minuteData[0].Data[1439].open;
 
 						tableBodyHtml.push(
-							"<tr><td>" + coin.symbol + "</td>" +
+							"<tr><td><a href= '" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1379].open) + "%</td>" + // 1 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1079].open) + "%</td>" + // 6 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[719].open) + "%</td>" + // 12 hour

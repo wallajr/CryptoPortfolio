@@ -77,8 +77,8 @@
 
 		<!-- Loads Tokens, Example File:
 		var coinJSON = '{"assets":[' +
-		'{"symbol":"ETH","numberOfTokens":"1" },' +
-		'{"symbol":"LTC","numberOfTokens":"1" }]}';
+		'{"symbol":"ETH","numberOfTokens":"1","coinMarketCapURL":"https://coinmarketcap.com/currencies/ethereum/" },' +
+		'{"symbol":"LTC","numberOfTokens":"1","coinMarketCapURL":"https://coinmarketcap.com/currencies/litecoin/" }]}';
 		-->
 		<script src="config.js"></script>
 		<script>
@@ -127,7 +127,7 @@
 					var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
 					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
 					var percentOfTotalValue =  usdValue/totalUSD*100;
-					tableBodyHtml.push("<tr><td>" + coin.symbol + "</td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
+					tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
 					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
 				}
 
