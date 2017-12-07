@@ -71,6 +71,7 @@
 			var coinsBuilt = 0;
 
 			function buildHourlySection(coin, numberOfCoins, tableBodyHtml){
+				wait(histoWait);
 				var thirtyDaysHoursAgoPrice = 0;
 				var sevenDaysAgoPrice = 0;
 				var twentyFourHoursAgoPrice = 0;
@@ -79,7 +80,7 @@
 				var oneHourAgoPrice = 0;
 				var currentPrice = 0;
 				var hourUrl = 'https://min-api.cryptocompare.com/data/histohour?fsym=' + coin.symbol + '&tsym=USD&limit=720&aggregate=1';
-				var minuteUrl = 'https://min-api.cryptocompare.com/data/histominute?fsym=' + coin.symbol + '&tsym=USD&limit=1440&aggregate=1';	
+				var minuteUrl = 'https://min-api.cryptocompare.com/data/histominute?fsym=' + coin.symbol + '&tsym=USD&limit=1440&aggregate=1';
 
 				if (new Date().getMinutes() === 0)
 				{
@@ -87,7 +88,7 @@
 						currentPrice = data.Data[719].open;
 
 						tableBodyHtml.push(
-							"<tr><td>" + coin.symbol + "</td>" + 
+							"<tr><td>" + coin.symbol + "</td>" +
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[718].open) + "%</td>" + // 1 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[713].open) + "%</td>" + // 6 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[707].open) + "%</td>" + // 12 hour
@@ -116,7 +117,7 @@
 						currentPrice = minuteData[0].Data[1439].open;
 
 						tableBodyHtml.push(
-							"<tr><td>" + coin.symbol + "</td>" + 
+							"<tr><td>" + coin.symbol + "</td>" +
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1379].open) + "%</td>" + // 1 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1079].open) + "%</td>" + // 6 hour
 							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[719].open) + "%</td>" + // 12 hour
@@ -139,13 +140,21 @@
 						}
 					});
 				}
-				
+
 			}
 
 			function CalculatePercentage(currentPrice, previousPrice)
 			{
 				return (((currentPrice/previousPrice)-1) * 100).toFixed(2);
 			}
+
+			function wait(ms) {
+		    var start = Date.now();
+		    var now = start;
+		    while (now - start < ms) {
+		      now = Date.now();
+		    }
+}
 
 			$(document).ready(function(){
 				var coins = JSON.parse(coinJSON);
@@ -155,8 +164,9 @@
 				// Histohour: 720 hours in 30 days
 				for (i = 0; i < coins["assets"].length; i++) {
 					var coin = coins["assets"][i];
-					
+
 					buildHourlySection(coin, coins["assets"].length, tableBodyHtml);
+
 					coinsCompleted += 1;
 				}
 			});
