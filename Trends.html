@@ -6,9 +6,9 @@
 		<link rel="shortcut icon" href="favicon-bitcoin.ico" type="image/x-icon">
 		<link href="favicon-bitcoin.ico" rel="shortcut icon">
 		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="Site.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css">
+		<link rel="stylesheet" href="Site.css">
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<!-- Latest compiled JavaScript -->
@@ -70,6 +70,24 @@
 			var coinsCompleted = 0;
 			var coinsBuilt = 0;
 
+			function calculatePercentage(currentPrice, previousPrice){
+				return (((currentPrice/previousPrice)-1) * 100).toFixed(2);
+			}
+
+			function buildHTMLPercentageRow(currentPrice, previousPrice){
+				var percentage = calculatePercentage(currentPrice, previousPrice)
+				var css = "table-td-number"
+
+				if(percentage > 0 ){
+					css += " table-td-number-positive";
+				}
+				else if(percentage < 0){
+					css += " table-td-number-negative";
+				}
+
+				return "<td class='" + css + "'>" + percentage + "%</td>";
+			}
+
 			function buildHourlySection(coin, numberOfCoins, tableBodyHtml){
 				wait(histoWait);
 				var thirtyDaysHoursAgoPrice = 0;
@@ -89,12 +107,13 @@
 
 						tableBodyHtml.push(
 							"<tr><td><a href= '" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[718].open) + "%</td>" + // 1 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[713].open) + "%</td>" + // 6 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[707].open) + "%</td>" + // 12 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[695].open) + "%</td>" + // 24 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[551].open) + "%</td>" + // 7 day
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, data.Data[0].open) + "%</td></tr>"); // 30 day
+							buildHTMLPercentageRow(currentPrice, data.Data[718].open) + // 1 hour
+							buildHTMLPercentageRow(currentPrice, data.Data[713].open) + // 6 hours
+							buildHTMLPercentageRow(currentPrice, data.Data[707].open) + // 12 hours
+							buildHTMLPercentageRow(currentPrice, data.Data[695].open) + // 24 hours
+							buildHTMLPercentageRow(currentPrice, data.Data[551].open) + // 7 days
+							buildHTMLPercentageRow(currentPrice, data.Data[0].open) + "</tr>" // 30 days
+						);
 
 						coinsBuilt++;
 
@@ -118,12 +137,13 @@
 
 						tableBodyHtml.push(
 							"<tr><td><a href= '" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1379].open) + "%</td>" + // 1 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[1079].open) + "%</td>" + // 6 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[719].open) + "%</td>" + // 12 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, minuteData[0].Data[0].open) + "%</td>" + // 24 hour
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, hourData[0].Data[551].open) + "%</td>" + // 7 day
-							"<td style='text-align: right'>" + CalculatePercentage(currentPrice, hourData[0].Data[0].open) + "%</td></tr>"); //30 day
+							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[1379].open) + // 1 hour
+							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[1079].open) + // 6 hours
+							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[719].open) + // 12 hours
+							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[0].open) + // 24 hours
+							buildHTMLPercentageRow(currentPrice, hourData[0].Data[551].open) + // 7 days
+							buildHTMLPercentageRow(currentPrice, hourData[0].Data[0].open) + "</tr>" // 30 days
+						);
 
 						coinsBuilt++;
 
@@ -141,11 +161,6 @@
 					});
 				}
 
-			}
-
-			function CalculatePercentage(currentPrice, previousPrice)
-			{
-				return (((currentPrice/previousPrice)-1) * 100).toFixed(2);
 			}
 
 			function wait(ms) {
