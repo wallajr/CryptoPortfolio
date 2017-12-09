@@ -61,21 +61,26 @@
 		</div>
 		<script src="config.js"></script>
 		<script>
-		//TODO Refactor
-		//TODO Add green and red font for positive and negative percents
-		//TODO Add 7 days percent
-		//TODO Add 30 days percent
-		//TODO Add Comments
-
 			var coinsCompleted = 0;
 			var coinsBuilt = 0;
+
+			// Function to cause site to pause for the number of milliseconds passed in.
+			// This was added due to api call limits enforced by CryptoCompare.
+			function wait(ms) {
+				var start = Date.now();
+				var now = start;
+
+				while (now - start < ms)
+				{
+					now = Date.now();
+				}
+			}
 
 			function calculatePercentage(currentPrice, previousPrice){
 				return (((currentPrice/previousPrice)-1) * 100).toFixed(2);
 			}
 
-			function buildHTMLPercentageRow(currentPrice, previousPrice){
-				var percentage = calculatePercentage(currentPrice, previousPrice)
+			function getPercentageCSS(percentage){
 				var css = "table-td-number"
 
 				if(percentage > 0 ){
@@ -85,65 +90,36 @@
 					css += " table-td-number-negative";
 				}
 
+				return css;
+			}
+
+			function buildHTMLPercentageTD(currentPrice, previousPrice){
+				var percentage = calculatePercentage(currentPrice, previousPrice)
+				var css = getPercentageCSS(percentage);
+
 				return "<td class='" + css + "'>" + percentage + "%</td>";
 			}
 
-			function buildHourlySection(coin, numberOfCoins, tableBodyHtml){
+			function buildHTMLPercentageTR(coin, minuteData, hourData){
+				var currentPrice = minuteData[0].Data[1439].open;
+
+				return "<tr><td><a href= '" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
+				buildHTMLPercentageTD(currentPrice, minuteData[0].Data[1379].open) + // 1 hour
+				buildHTMLPercentageTD(currentPrice, minuteData[0].Data[1079].open) + // 6 hours
+				buildHTMLPercentageTD(currentPrice, minuteData[0].Data[719].open) + // 12 hours
+				buildHTMLPercentageTD(currentPrice, minuteData[0].Data[0].open) + // 24 hours
+				buildHTMLPercentageTD(currentPrice, hourData[0].Data[551].open) + // 7 days
+				buildHTMLPercentageTD(currentPrice, hourData[0].Data[0].open) + "</tr>" // 30 days
+				;
+			}
+
+			function buildTableBody(coin, numberOfCoins, tableBodyHtml){
 				wait(histoWait);
-				var thirtyDaysHoursAgoPrice = 0;
-				var sevenDaysAgoPrice = 0;
-				var twentyFourHoursAgoPrice = 0;
-				var twelveHoursAgoPrice = 0;
-				var sixHoursAgoPrice = 0;
-				var oneHourAgoPrice = 0;
-				var currentPrice = 0;
 				var hourUrl = 'https://min-api.cryptocompare.com/data/histohour?fsym=' + coin.symbol + '&tsym=USD&limit=720&aggregate=1';
 				var minuteUrl = 'https://min-api.cryptocompare.com/data/histominute?fsym=' + coin.symbol + '&tsym=USD&limit=1440&aggregate=1';
 
-				if (new Date().getMinutes() === 0)
-				{
-					$.get(hourUrl, function(data, status){
-						currentPrice = data.Data[719].open;
-
-						tableBodyHtml.push(
-							"<tr><td><a href= '" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
-							buildHTMLPercentageRow(currentPrice, data.Data[718].open) + // 1 hour
-							buildHTMLPercentageRow(currentPrice, data.Data[713].open) + // 6 hours
-							buildHTMLPercentageRow(currentPrice, data.Data[707].open) + // 12 hours
-							buildHTMLPercentageRow(currentPrice, data.Data[695].open) + // 24 hours
-							buildHTMLPercentageRow(currentPrice, data.Data[551].open) + // 7 days
-							buildHTMLPercentageRow(currentPrice, data.Data[0].open) + "</tr>" // 30 days
-						);
-
-						coinsBuilt++;
-
-						//TODO Will have to get moved if other ajax calls come afterwards (histohour to be used for 7 days and 30 days ago)
-						if(coinsBuilt == numberOfCoins){
-							//Insert Body and DataTable Functionality
-							$("#crypto tbody").append(tableBodyHtml);
-							$('#crypto').DataTable({
-								"pagingType": "full_numbers",
-								// Default is 10 rows per page. Add a pageLength variable to config.js to
-								// set a custom page length. (Eg. var pageLength = 25;)
-								"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
-							});
-						}
-					});
-				}
-				else
-				{
 					$.when( $.getJSON(hourUrl), $.getJSON(minuteUrl) ).then(function( hourData, minuteData ){
-						currentPrice = minuteData[0].Data[1439].open;
-
-						tableBodyHtml.push(
-							"<tr><td><a href= '" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
-							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[1379].open) + // 1 hour
-							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[1079].open) + // 6 hours
-							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[719].open) + // 12 hours
-							buildHTMLPercentageRow(currentPrice, minuteData[0].Data[0].open) + // 24 hours
-							buildHTMLPercentageRow(currentPrice, hourData[0].Data[551].open) + // 7 days
-							buildHTMLPercentageRow(currentPrice, hourData[0].Data[0].open) + "</tr>" // 30 days
-						);
+						tableBodyHtml.push(buildHTMLPercentageTR(coin, minuteData, hourData));
 
 						coinsBuilt++;
 
@@ -160,16 +136,6 @@
 						}
 					});
 				}
-
-			}
-
-			function wait(ms) {
-		    var start = Date.now();
-		    var now = start;
-		    while (now - start < ms) {
-		      now = Date.now();
-		    }
-}
 
 			$(document).ready(function(){
 				var coins = JSON.parse(coinJSON);
@@ -180,7 +146,7 @@
 				for (i = 0; i < coins["assets"].length; i++) {
 					var coin = coins["assets"][i];
 
-					buildHourlySection(coin, coins["assets"].length, tableBodyHtml);
+					buildTableBody(coin, coins["assets"].length, tableBodyHtml);
 
 					coinsCompleted += 1;
 				}
