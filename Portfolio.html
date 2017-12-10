@@ -42,6 +42,7 @@
 								<tr>
 									<th>Coin</th>
 									<th style="text-align: right">Tokens Owned</th>
+									<th style="text-align: right">BTC Per Token</th>
 									<th style="text-align: right">USD Per Token</th>
 									<th style="text-align: right">USD Value</th>
 									<th style="text-align: right">BTC Value</th>
@@ -56,12 +57,14 @@
 									<td>Total</td>
 									<td></td>
 									<td></td>
+									<td></td>
 									<td style="text-align: right"></td>
 									<td style="text-align: right"></td>
 									<td></td>
 								</tr>
 								<tr id="Investments_Row">
 									<td>Investments</td>
+									<td></td>
 									<td></td>
 									<td style="text-align: right">Total</td>
 									<td style="text-align: right"></td>
@@ -127,20 +130,20 @@
 					var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
 					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
 					var percentOfTotalValue =  usdValue/totalUSD*100;
-					tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
+					tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + coinsPricing[coin.symbol].BTC + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
 					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
 				}
 
 				//Insert Body and Totals
 				$("#crypto tbody").append(tableBodyHtml);
-				$("#Totals_Row td:nth-child(4)").html("$" + totalUSD.toFixed(2));
-				$("#Totals_Row td:nth-child(5)").html(totalBTC);
+				$("#Totals_Row td:nth-child(5)").html("$" + totalUSD.toFixed(2));
+				$("#Totals_Row td:nth-child(6)").html(totalBTC);
 				// Optional ROI calculation.
 				// Set totalInvestment variable in config.js (eg. var totalInvestment = 100;)
 				if (typeof totalInvestment !== 'undefined'){
 					var roi = (((totalUSD / totalInvestment) - 1) * 100);
-					$("#Investments_Row td:nth-child(4)").html("$" + totalInvestment.toFixed(2));
-					$("#Investments_Row td:nth-child(6)").html(roi.toFixed(2) + '%');
+					$("#Investments_Row td:nth-child(5)").html("$" + totalInvestment.toFixed(2));
+					$("#Investments_Row td:nth-child(7)").html(roi.toFixed(2) + '%');
 				}else{
 					$("#Investments_Row").hide();
 				}
