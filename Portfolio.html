@@ -95,7 +95,9 @@
 									</tr>
 								</thead>
 								<tbody>
-									<!-- Rows to be added dynamically -->
+									<tr style="font-weight:bold;color:red;">
+										<td colspan="3">Add prospective coins to config.js to track their value here.</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
@@ -201,7 +203,7 @@
 				else
 				{
 					//Insert Body and Totals
-					$("#prospectsTable tbody").append(tableBodyHtml);
+					$("#prospectsTable tbody").html(tableBodyHtml);
 
 					$('#prospectsTable').DataTable({
 						"pagingType": "full_numbers",
@@ -212,16 +214,19 @@
 
 		  	$(document).ready(function(){
 				var investmentCoins = JSON.parse(coinJSON);
-				var prospectCoins = JSON.parse(prospectsJSON);
 				var url = BuildPricingInformationURL(investmentCoins);
 				$.get(url, function(data, status){
 					BuildCoinValueTable(investmentCoins, data, true);
 				});
 
-				url = BuildPricingInformationURL(prospectCoins);
-				$.get(url, function(data, status){
-					BuildCoinValueTable(prospectCoins, data, false);
-				});
+				if (typeof columnSort !== 'undefined')
+				{
+					var prospectCoins = JSON.parse(prospectsJSON);
+					url = BuildPricingInformationURL(prospectCoins);
+					$.get(url, function(data, status){
+						BuildCoinValueTable(prospectCoins, data, false);
+					});
+				}
 		  	});
 		</script>
 	</body>
