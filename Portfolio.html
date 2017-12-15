@@ -33,48 +33,74 @@
 
 		<div class="container">
 			<h1>My Portfolio</h1>
-
-			<div class="row">
-			  	<div class="col-sm-12">
-					<div class="table-responsive">
-				  	<table id="crypto" class="table table-hover">
-				  		<thead>
-								<tr>
-									<th>Coin</th>
-									<th style="text-align: right">Tokens Owned</th>
-									<th style="text-align: right">BTC Per Token</th>
-									<th style="text-align: right">USD Per Token</th>
-									<th style="text-align: right">USD Value</th>
-									<th style="text-align: right">BTC Value</th>
-									<th style="text-align: right">% of Total Value</th>
-								</tr>
-							</thead>
-				  		<tbody>
-								<!-- Rows to be added dynamically -->
-				  		</tbody>
-							<tfoot>
-								<tr id="Totals_Row">
-									<td>Total</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td style="text-align: right"></td>
-									<td style="text-align: right"></td>
-									<td></td>
-								</tr>
-								<tr id="Investments_Row">
-									<td>Investments</td>
-									<td></td>
-									<td></td>
-									<td style="text-align: right">Total</td>
-									<td style="text-align: right"></td>
-									<td style="text-align: right">ROI</td>
-									<td style="text-align: right"></td>
-								</tr>
-							</tfoot>
-						</table>
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#investments">Investments</a></li>
+				<li><a data-toggle="tab" href="#prospects">Prospects</a></li>
+			</ul>
+				
+			<div class="tab-content">
+				<div id="investments" class="tab-pane fade in active tabPanelPad">
+					<!-- <h3>My Investments</h3> -->
+					<div class="col-sm-12">
+						<div class="table-responsive">
+							<table id="investmentsTable" class="table table-hover">
+								<thead>
+									<tr>
+										<th>Coin</th>
+										<th style="text-align: right">Tokens Owned</th>
+										<th style="text-align: right">BTC Per Token</th>
+										<th style="text-align: right">USD Per Token</th>
+										<th style="text-align: right">USD Value</th>
+										<th style="text-align: right">BTC Value</th>
+										<th style="text-align: right">% of Total Value</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- Rows to be added dynamically -->
+								</tbody>
+								<tfoot>
+									<tr id="Totals_Row">
+										<td>Total</td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td style="text-align: right"></td>
+										<td style="text-align: right"></td>
+										<td></td>
+									</tr>
+									<tr id="Investments_Row">
+										<td>Investments</td>
+										<td></td>
+										<td></td>
+										<td style="text-align: right">Total</td>
+										<td style="text-align: right"></td>
+										<td style="text-align: right">ROI</td>
+										<td style="text-align: right"></td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
 					</div>
-			  	</div>
+				</div>
+				<div id="prospects" class="tab-pane fade tabPanelPad">
+					<!-- <h3>My Propects</h3> -->
+					<div class="col-sm-12">
+						<div class="table-responsive">
+							<table id="prospectsTable" class="table table-hover">
+								<thead>
+									<tr>
+										<th>Coin</th>
+										<th style="text-align: right">BTC Per Token</th>
+										<th style="text-align: right">USD Per Token</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- Rows to be added dynamically -->
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -97,7 +123,7 @@
 				for (i = 0; i < coins["assets"].length; i++) {
 					var coin = coins["assets"][i]
 					tokenSybmols += i == 0 ? coin.symbol : ',' + coin.symbol;
-						}
+				}
 
 				return 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=' + tokenSybmols + '&tsyms=BTC,USD';
 			}
@@ -105,20 +131,23 @@
 			/*
 					Build the baic pricing table using the pricing information return by the api + the coins in your portfolio
 			*/
-			function BuildCoinValueTable(coins, coinsPricing){
+			function BuildCoinValueTable(coins, coinsPricing, isInvestments){
 				var totalUSD = 0;
 				var totalBTC = 0;
 				var tableBodyHtml = [];
 
 				// Iterates over you coins, calculating the total values of your portfolio in btc and usd.
 				// This is done separately in order to allow for percent of value to be calculated when building the html table.
-				for (i = 0; i < coins["assets"].length; i++) {
-					var coin = coins["assets"][i];
-					var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
-					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
+				if (isInvestments)
+				{
+					for (i = 0; i < coins["assets"].length; i++) {
+						var coin = coins["assets"][i];
+						var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
+						var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
 
-					totalUSD += usdValue;
-					totalBTC += btcValue;
+						totalUSD += usdValue;
+						totalBTC += btcValue;
+					}
 				}
 
 
@@ -127,42 +156,71 @@
 				for (i = 0; i < coins["assets"].length; i++) {
 					var coin = coins["assets"][i]
 					var coinId = "#" + coin.symbol + "_Row";
-					var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
-					var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
-					var percentOfTotalValue =  usdValue/totalUSD*100;
-					tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + coinsPricing[coin.symbol].BTC + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
-					"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
+					if (isInvestments)
+					{
+						var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
+						var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
+						var percentOfTotalValue =  usdValue/totalUSD*100;
+						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + coinsPricing[coin.symbol].BTC + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
+						"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
+					}
+					else
+					{
+						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" + 
+							"<td style='text-align: right'>" + coinsPricing[coin.symbol].BTC + "</td>" + 
+							"<td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td></tr>");
+
+					}
 				}
 
-				//Insert Body and Totals
-				$("#crypto tbody").append(tableBodyHtml);
-				$("#Totals_Row td:nth-child(5)").html("$" + totalUSD.toFixed(2));
-				$("#Totals_Row td:nth-child(6)").html(totalBTC);
-				// Optional ROI calculation.
-				// Set totalInvestment variable in config.js (eg. var totalInvestment = 100;)
-				if (typeof totalInvestment !== 'undefined'){
-					var roi = (((totalUSD / totalInvestment) - 1) * 100);
-					$("#Investments_Row td:nth-child(5)").html("$" + totalInvestment.toFixed(2));
-					$("#Investments_Row td:nth-child(7)").html(roi.toFixed(2) + '%');
-				}else{
-					$("#Investments_Row").hide();
-				}
+				if (isInvestments)
+				{
+					//Insert Body and Totals
+					$("#investmentsTable tbody").append(tableBodyHtml);
+					$("#Totals_Row td:nth-child(5)").html("$" + totalUSD.toFixed(2));
+					$("#Totals_Row td:nth-child(6)").html(totalBTC);
+					// Optional ROI calculation.
+					// Set totalInvestment variable in config.js (eg. var totalInvestment = 100;)
+					if (typeof totalInvestment !== 'undefined'){
+						var roi = (((totalUSD / totalInvestment) - 1) * 100);
+						$("#Investments_Row td:nth-child(5)").html("$" + totalInvestment.toFixed(2));
+						$("#Investments_Row td:nth-child(7)").html(roi.toFixed(2) + '%');
+					}else{
+						$("#Investments_Row").hide();
+					}
 
-				// Default is 10 rows per page. Add a pageLength variable to config.js to
-				// set a custom page length. (Eg. var pageLength = 25;)
-				// To sort on a specific column add columnset to config.js (Eg. var columnSort = 4;)
-				$('#crypto').DataTable({
-					"pagingType": "full_numbers",
-					"order": [[ typeof columnSort !== 'undefined' ? columnSort : 0, "desc" ]],
-					"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
-				});
+					// Default is 10 rows per page. Add a pageLength variable to config.js to
+					// set a custom page length. (Eg. var pageLength = 25;)
+					// To sort on a specific column add columnset to config.js (Eg. var columnSort = 4;)
+					$('#investmentsTable').DataTable({
+						"pagingType": "full_numbers",
+						"order": [[ typeof columnSort !== 'undefined' ? columnSort : 0, "desc" ]],
+						"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
+					});
+				}
+				else
+				{
+					//Insert Body and Totals
+					$("#prospectsTable tbody").append(tableBodyHtml);
+
+					$('#prospectsTable').DataTable({
+						"pagingType": "full_numbers",
+						"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
+					});
+				}
 			}
 
 		  	$(document).ready(function(){
-				var coins = JSON.parse(coinJSON);
-				var url = BuildPricingInformationURL(coins);
+				var investmentCoins = JSON.parse(coinJSON);
+				var prospectCoins = JSON.parse(prospectsJSON);
+				var url = BuildPricingInformationURL(investmentCoins);
 				$.get(url, function(data, status){
-					BuildCoinValueTable(coins, data);
+					BuildCoinValueTable(investmentCoins, data, true);
+				});
+
+				url = BuildPricingInformationURL(prospectCoins);
+				$.get(url, function(data, status){
+					BuildCoinValueTable(prospectCoins, data, false);
 				});
 		  	});
 		</script>

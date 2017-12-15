@@ -1,5 +1,8 @@
 tfoot { font-weight: bold;}
 .table-td-number-negative{color: #d14836;}
 .table-td-number-positive{color: #093;}
-.table-td-number{text-align: right;
+.table-td-number{text-align: right;}
+
+.tabPanelPad{
+    padding-top: 10px;
 }
