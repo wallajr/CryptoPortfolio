@@ -53,6 +53,7 @@
 										<th style="text-align: right">USD Value</th>
 										<th style="text-align: right">BTC Value</th>
 										<th style="text-align: right">% of Total Value</th>
+										<th style="text-align: right">Market Cap</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -67,6 +68,7 @@
 										<td style="text-align: right"></td>
 										<td style="text-align: right"></td>
 										<td></td>
+										<td></td>
 									</tr>
 									<tr id="Investments_Row">
 										<td>Investments</td>
@@ -76,6 +78,7 @@
 										<td style="text-align: right"></td>
 										<td style="text-align: right">ROI</td>
 										<td style="text-align: right"></td>
+										<td></td>
 									</tr>
 								</tfoot>
 							</table>
@@ -92,11 +95,12 @@
 										<th>Coin</th>
 										<th style="text-align: right">BTC Per Token</th>
 										<th style="text-align: right">USD Per Token</th>
+										<th style="text-align: right">Market Cap</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr style="font-weight:bold;color:red;">
-										<td colspan="3">Add prospective coins to config.js to track their value here.</td>
+										<td colspan="4">Add prospective coins to config.js to track their value here.</td>
 									</tr>
 								</tbody>
 							</table>
@@ -127,7 +131,7 @@
 					tokenSybmols += i == 0 ? coin.symbol : ',' + coin.symbol;
 				}
 
-				return 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=' + tokenSybmols + '&tsyms=BTC,USD';
+				return 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=' + tokenSybmols + '&tsyms=BTC,USD';
 			}
 
 			/*
@@ -144,8 +148,9 @@
 				{
 					for (i = 0; i < coins["assets"].length; i++) {
 						var coin = coins["assets"][i];
-						var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
-						var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
+						var coinJson = coinsPricing[coin.symbol];
+						var usdValue = coinJson["USD"].PRICE *  coin.numberOfTokens;
+						var btcValue = coinJson["BTC"].PRICE * coin.numberOfTokens;
 
 						totalUSD += usdValue;
 						totalBTC += btcValue;
@@ -157,20 +162,30 @@
 				// to create the basic pricing information table
 				for (i = 0; i < coins["assets"].length; i++) {
 					var coin = coins["assets"][i]
+					var coinJson = coinsPricing[coin.symbol];
 					var coinId = "#" + coin.symbol + "_Row";
+					var marketCap = coinJson["USD"].MKTCAP;
+
 					if (isInvestments)
 					{
-						var usdValue = coinsPricing[coin.symbol].USD *  coin.numberOfTokens;
-						var btcValue = coinsPricing[coin.symbol].BTC * coin.numberOfTokens;
+						var usdValue = coinJson["USD"].PRICE *  coin.numberOfTokens;
+						var btcValue = coinJson["BTC"].PRICE * coin.numberOfTokens;
 						var percentOfTotalValue =  usdValue/totalUSD*100;
-						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td><td style='text-align: right'>" + coin.numberOfTokens + "</td><td style='text-align: right'>" + coinsPricing[coin.symbol].BTC + "</td><td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td><td style='text-align: right'>" + "$" + usdValue.toFixed(2) +
-						"</td><td style='text-align: right'>" + btcValue + "</td>" + "<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td></tr>");
+						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
+							"<td style='text-align: right'>" + coin.numberOfTokens + "</td>" +
+							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '0.01' ? 6 : 2)) + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney(usdValue.toFixed(2)) + "</td>" +
+							"<td style='text-align: right'>" + btcValue.toFixed(8) + "</td>" + 
+							"<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].MKTCAP).toFixed(2)) + "</td></tr>");
 					}
 					else
 					{
 						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" + 
-							"<td style='text-align: right'>" + coinsPricing[coin.symbol].BTC + "</td>" + 
-							"<td style='text-align: right'>" + "$" + (coinsPricing[coin.symbol].USD).toFixed(coinsPricing[coin.symbol].USD < '0.01' ? 6 : 2) + "</td></tr>");
+							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" + 
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '0.01' ? 6 : 2)) + "</td>" + 
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].MKTCAP).toFixed(2)) + "</td></tr>");
 
 					}
 				}
@@ -178,9 +193,9 @@
 				if (isInvestments)
 				{
 					//Insert Body and Totals
-					$("#investmentsTable tbody").append(tableBodyHtml);
+					$("#investmentsTable tbody").html(tableBodyHtml);
 					$("#Totals_Row td:nth-child(5)").html("$" + totalUSD.toFixed(2));
-					$("#Totals_Row td:nth-child(6)").html(totalBTC);
+					$("#Totals_Row td:nth-child(6)").html(totalBTC.toFixed(8));
 					// Optional ROI calculation.
 					// Set totalInvestment variable in config.js (eg. var totalInvestment = 100;)
 					if (typeof totalInvestment !== 'undefined'){
@@ -207,16 +222,22 @@
 
 					$('#prospectsTable').DataTable({
 						"pagingType": "full_numbers",
+						"order": [[3]],
 						"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
 					});
 				}
+			}
+
+			function formatMoney(money)
+			{
+				return money.replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 			}
 
 		  	$(document).ready(function(){
 				var investmentCoins = JSON.parse(coinJSON);
 				var url = BuildPricingInformationURL(investmentCoins);
 				$.get(url, function(data, status){
-					BuildCoinValueTable(investmentCoins, data, true);
+					BuildCoinValueTable(investmentCoins, data["RAW"], true);
 				});
 
 				if (typeof columnSort !== 'undefined')
@@ -224,7 +245,7 @@
 					var prospectCoins = JSON.parse(prospectsJSON);
 					url = BuildPricingInformationURL(prospectCoins);
 					$.get(url, function(data, status){
-						BuildCoinValueTable(prospectCoins, data, false);
+						BuildCoinValueTable(prospectCoins, data["RAW"], false);
 					});
 				}
 		  	});
