@@ -35,8 +35,13 @@
 
 		<div class="container">
 			<h1>Trends</h1>
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#investments">Investments</a></li>
+				<li><a data-toggle="tab" href="#prospects">Prospects</a></li>
+			</ul>
 
-			<div class="row">
+			<div class="tab-content">
+				<div id="investments" class="tab-pane fade in active tabPanelPad">
 				<div class="col-sm-12">
 					<div class="table-responsive">
 						<table id="crypto" class="table table-hover">
@@ -58,12 +63,37 @@
 					</div>
 				</div>
 			</div>
+
+			<div id="prospects" class="tab-pane fade tabPanelPad">
+			<div class="col-sm-12">
+				<div class="table-responsive">
+					<table id="prospectTable" class="table table-hover">
+						<thead>
+							<tr>
+								<th>Coin</th>
+								<th style="text-align: right">1 Hour</th>
+								<th style="text-align: right">6 Hours</th>
+								<th style="text-align: right">12 Hours</th>
+								<th style="text-align: right">24 Hours</th>
+								<th style="text-align: right">7 Days</th>
+								<th style="text-align: right">30 Days</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- Rows to be added dynamically -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+			</div>
 		</div>
 		<script src="config.js"></script>
 		<script>
-			var coinsCompleted = 0;
-			var coinsBuilt = 0;
-
+		var investmentCoinsBuilt = 0;
+		var prospectCoinsBuilt = 0;
 			// Function to cause site to pause for the number of milliseconds passed in.
 			// This was added due to api call limits enforced by CryptoCompare.
 			function wait(ms) {
@@ -113,7 +143,7 @@
 				;
 			}
 
-			function buildTableBody(coin, numberOfCoins, tableBodyHtml){
+			function buildTableBody(coin, numberOfCoins, tableBodyHtml, isProspects){
 				wait(histoWait);
 				var hourUrl = 'https://min-api.cryptocompare.com/data/histohour?fsym=' + coin.symbol + '&tsym=USD&limit=720&aggregate=1';
 				var minuteUrl = 'https://min-api.cryptocompare.com/data/histominute?fsym=' + coin.symbol + '&tsym=USD&limit=1440&aggregate=1';
@@ -121,10 +151,15 @@
 					$.when( $.getJSON(hourUrl), $.getJSON(minuteUrl) ).then(function( hourData, minuteData ){
 						tableBodyHtml.push(buildHTMLPercentageTR(coin, minuteData, hourData));
 
-						coinsBuilt++;
+						if(isProspects){
+						prospectCoinsBuilt++;
+					}
+					else{
+						investmentCoinsBuilt++;
+					}
 
 						//TODO Will have to get moved if other ajax calls come afterwards (histohour to be used for 7 days and 30 days ago)
-						if(coinsBuilt == numberOfCoins){
+						if(investmentCoinsBuilt == numberOfCoins){
 							//Insert Body and DataTable Functionality
 							$("#crypto tbody").append(tableBodyHtml);
 							$('#crypto').DataTable({
@@ -134,22 +169,41 @@
 								"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
 							});
 						}
+
+						if(prospectCoinsBuilt == numberOfCoins){
+							//Insert Body and DataTable Functionality
+							$("#prospectTable tbody").append(tableBodyHtml);
+							$('#prospectTable').DataTable({
+								"pagingType": "full_numbers",
+								// Default is 10 rows per page. Add a pageLength variable to config.js to
+								// set a custom page length. (Eg. var pageLength = 25;)
+								"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
+							});
+						}
+
 					});
 				}
 
 			$(document).ready(function(){
 				var coins = JSON.parse(coinJSON);
+				var prospectCoins = JSON.parse(prospectsJSON);
 				var tableBodyHtml = [];
+				var prospectTableBodyHtml = [];
 				// Use histominute for hours 1-24, histohour for days 1-30
 				// Histominute: 1440 minutes in 24 hours
 				// Histohour: 720 hours in 30 days
 				for (i = 0; i < coins["assets"].length; i++) {
 					var coin = coins["assets"][i];
 
-					buildTableBody(coin, coins["assets"].length, tableBodyHtml);
-
-					coinsCompleted += 1;
+					buildTableBody(coin, coins["assets"].length, tableBodyHtml, false);
 				}
+
+				for (i = 0; i < prospectCoins["assets"].length; i++) {
+					var prospectCoin = prospectCoins["assets"][i];
+
+					buildTableBody(prospectCoin, prospectCoins["assets"].length, prospectTableBodyHtml, true);
+				}
+
 			});
 		</script>
     </body>
