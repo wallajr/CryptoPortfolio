@@ -208,10 +208,10 @@
 
 					// Default is 10 rows per page. Add a pageLength variable to config.js to
 					// set a custom page length. (Eg. var pageLength = 25;)
-					// To sort on a specific column add columnset to config.js (Eg. var columnSort = 4;)
+					// To sort on a specific column add columnset to config.js (Eg. var portfolioInvestmentsColumnSort = 4;)
 					$('#investmentsTable').DataTable({
 						"pagingType": "full_numbers",
-						"order": [[ typeof columnSort !== 'undefined' ? columnSort : 0, "desc" ]],
+						"order": [[ typeof portfolioInvestmentsColumnSort !== 'undefined' ? portfolioInvestmentsColumnSort : 0, "desc" ]],
 						"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
 					});
 				}
@@ -222,7 +222,7 @@
 
 					$('#prospectsTable').DataTable({
 						"pagingType": "full_numbers",
-						"order": [[3]],
+						"order": [[ typeof portfolioProspectsColumnSort !== 'undefined' ? portfolioProspectsColumnSort : 0, "desc" ]],
 						"pageLength": typeof pageLength !== 'undefined' ? pageLength : 10
 					});
 				}
@@ -240,7 +240,7 @@
 					BuildCoinValueTable(investmentCoins, data["RAW"], true);
 				});
 
-				if (typeof columnSort !== 'undefined')
+				if (typeof portfolioInvestmentsColumnSort !== 'undefined')
 				{
 					var prospectCoins = JSON.parse(prospectsJSON);
 					url = BuildPricingInformationURL(prospectCoins);
