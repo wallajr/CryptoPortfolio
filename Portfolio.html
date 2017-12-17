@@ -174,7 +174,7 @@
 						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + coin.numberOfTokens + "</td>" +
 							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '0.01' ? 6 : 2)) + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '1' ? 6 : 2)) + "</td>" +
 							"<td style='text-align: right'>" + "$" + formatMoney(usdValue.toFixed(2)) + "</td>" +
 							"<td style='text-align: right'>" + btcValue.toFixed(8) + "</td>" +
 							"<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td>" +
@@ -184,7 +184,7 @@
 					{
 						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '0.01' ? 6 : 2)) + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '1' ? 6 : 2)) + "</td>" +
 							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].MKTCAP).toFixed(2)) + "</td></tr>");
 
 					}
