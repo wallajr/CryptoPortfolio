@@ -173,8 +173,13 @@
 						var percentOfTotalValue =  usdValue/totalUSD*100;
 						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + coin.numberOfTokens + "</td>" +
+<<<<<<< HEAD
 							"<td style='text-align: right'>" + parseFloat(coinJson["BTC"].PRICE) + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].PRICE)).toFixed(parseFloat(coinJson["USD"].PRICE) < '0.01' ? 6 : 2)) + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].PRICE)).toFixed(parseFloat(coinJson["USD"].PRICE) < '1' ? 6 : 2)) + "</td>" +
+=======
+							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '1' ? 6 : 2)) + "</td>" +
+>>>>>>> 03838b4ea4c4706f9e5acb32685d65fdbdf16178
 							"<td style='text-align: right'>" + "$" + formatMoney(usdValue.toFixed(2)) + "</td>" +
 							"<td style='text-align: right'>" + btcValue.toFixed(8) + "</td>" +
 							"<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td>" +
@@ -184,8 +189,13 @@
 					{
 						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].PRICE)).toFixed(parseFloat(coinJson["USD"].PRICE) < '0.01' ? 6 : 2)) + "</td>" +
+<<<<<<< HEAD
+							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].PRICE)).toFixed(parseFloat(coinJson["USD"].PRICE) < '1' ? 6 : 2)) + "</td>" +
 							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].MKTCAP)).toFixed(2)) + "</td></tr>");
+=======
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '1' ? 6 : 2)) + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].MKTCAP).toFixed(2)) + "</td></tr>");
+>>>>>>> 03838b4ea4c4706f9e5acb32685d65fdbdf16178
 
 					}
 				}
