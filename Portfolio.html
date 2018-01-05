@@ -149,8 +149,8 @@
 					for (i = 0; i < coins["assets"].length; i++) {
 						var coin = coins["assets"][i];
 						var coinJson = coinsPricing[coin.symbol];
-						var usdValue = coinJson["USD"].PRICE *  coin.numberOfTokens;
-						var btcValue = coinJson["BTC"].PRICE * coin.numberOfTokens;
+						var usdValue = parseFloat(coinJson["USD"].PRICE) *  coin.numberOfTokens;
+						var btcValue = parseFloat(coinJson["BTC"].PRICE) * coin.numberOfTokens;
 
 						totalUSD += usdValue;
 						totalBTC += btcValue;
@@ -168,24 +168,24 @@
 
 					if (isInvestments)
 					{
-						var usdValue = coinJson["USD"].PRICE *  coin.numberOfTokens;
-						var btcValue = coinJson["BTC"].PRICE * coin.numberOfTokens;
+						var usdValue = parseFloat(coinJson["USD"].PRICE) *  coin.numberOfTokens;
+						var btcValue = parseFloat(coinJson["BTC"].PRICE) * coin.numberOfTokens;
 						var percentOfTotalValue =  usdValue/totalUSD*100;
 						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + coin.numberOfTokens + "</td>" +
-							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '0.01' ? 6 : 2)) + "</td>" +
+							"<td style='text-align: right'>" + parseFloat(coinJson["BTC"].PRICE) + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].PRICE)).toFixed(parseFloat(coinJson["USD"].PRICE) < '0.01' ? 6 : 2)) + "</td>" +
 							"<td style='text-align: right'>" + "$" + formatMoney(usdValue.toFixed(2)) + "</td>" +
 							"<td style='text-align: right'>" + btcValue.toFixed(8) + "</td>" +
 							"<td style='text-align: right'>" + percentOfTotalValue.toFixed(2) + "%" + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].MKTCAP).toFixed(2)) + "</td></tr>");
+							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].MKTCAP)).toFixed(2)) + "</td></tr>");
 					}
 					else
 					{
 						tableBodyHtml.push("<tr><td><a href='" + coin.coinMarketCapURL + "'>" + coin.symbol + "</a></td>" +
 							"<td style='text-align: right'>" + coinJson["BTC"].PRICE + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].PRICE).toFixed(coinJson["USD"].PRICE < '0.01' ? 6 : 2)) + "</td>" +
-							"<td style='text-align: right'>" + "$" + formatMoney((coinJson["USD"].MKTCAP).toFixed(2)) + "</td></tr>");
+							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].PRICE)).toFixed(parseFloat(coinJson["USD"].PRICE) < '0.01' ? 6 : 2)) + "</td>" +
+							"<td style='text-align: right'>" + "$" + formatMoney((parseFloat(coinJson["USD"].MKTCAP)).toFixed(2)) + "</td></tr>");
 
 					}
 				}

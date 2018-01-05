@@ -107,7 +107,7 @@
 			}
 
 			function calculatePercentage(currentPrice, previousPrice){
-				return (((currentPrice/previousPrice)-1) * 100).toFixed(2);
+				return (((parseFloat(currentPrice)/parseFloat(previousPrice))-1) * 100).toFixed(2);
 			}
 
 			function getPercentageCSS(percentage){
