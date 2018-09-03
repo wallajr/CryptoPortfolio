@@ -1,8 +1,10 @@
+using CryptoReactPortfolio.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +23,9 @@ namespace CryptoReactPortfolio
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<CryptoReactPortfolioContext>(opt => 
+                opt.UseInMemoryDatabase("CryptoReactPortfolioDB"));
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
