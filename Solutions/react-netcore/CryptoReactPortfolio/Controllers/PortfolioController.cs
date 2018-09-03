@@ -28,6 +28,7 @@ namespace CryptoReactPortfolio.Controllers
         public Portfolio Get()
         {
             Portfolio portfolio = ConvertToPortfolio(GetCurrentPrices());
+            portfolio.Entries = portfolio.Entries.OrderByDescending(e => e.USDValue).ToList();
 
             return portfolio;
         }
