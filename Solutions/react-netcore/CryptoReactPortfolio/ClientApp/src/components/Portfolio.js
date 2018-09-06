@@ -40,7 +40,7 @@ export class Portfolio extends Component {
                 <td>{formatMoney(entry.usdPerToken)}</td>
                 <td>{formatMoney(entry.usdValue)}</td>
                 <td>{entry.btcValue.toFixed(8)}</td>
-                <td>{(entry.usdValue/coinPortfolio.totalUSDValue*100)}%</td>
+                <td>{(entry.usdValue/coinPortfolio.totalUSDValue*100).toFixed(2)}%</td>
                 <td>{formatMoney(entry.marketCap)}</td>
                 </tr>
             )}
@@ -63,7 +63,7 @@ export class Portfolio extends Component {
                     <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>Total</strong></td>
                     <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{formatMoney(coinPortfolio.totalInvestment)}</strong></td>
                     <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>ROI</strong></td>
-                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{coinPortfolio.roi}</strong></td>
+                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{coinPortfolio.roi.toFixed(2)}</strong></td>
                     <td rowSpan="1" colSpan="1"></td></tr>
             </tfoot>
       </Table>
