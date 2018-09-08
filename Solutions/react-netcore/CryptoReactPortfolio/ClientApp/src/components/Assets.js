@@ -9,7 +9,6 @@ export class Assets extends Component {
         super(props);
 
         this.handleSelect = this.handleSelect.bind(this);
-
         this.state = { showFinancialTable: true, key: 1 };
       }
 
@@ -20,7 +19,7 @@ export class Assets extends Component {
       render() {
           return (
               <div>
-                <h1>Portfolio</h1>
+                <h1>Assets</h1>
                 <Tabs
                     activeKey={this.state.key}
                     onSelect={this.handleSelect}

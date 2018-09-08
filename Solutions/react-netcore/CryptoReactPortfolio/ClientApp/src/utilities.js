@@ -1,8 +1,13 @@
-function formatMoney(money)
+function formatNumber(number)
 {
-    var parts = money.toFixed(2).toString().split(".");
+    var parts = number.toFixed(2).toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return "$" + parts.join(".");
+    return parts.join(".");
 }
 
-export { formatMoney }
+function formatMoney(money)
+{
+    return "$" + formatNumber(money);
+}
+
+export { formatNumber, formatMoney }
