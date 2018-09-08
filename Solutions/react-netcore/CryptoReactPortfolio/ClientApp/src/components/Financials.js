@@ -2,21 +2,21 @@ import React, { Component } from 'react';
 import { Table } from 'react-bootstrap';
 import { formatMoney } from '../utilities'
 
-export class Portfolio extends Component {
-  displayName = Portfolio.name
+export class Financials extends Component {
+  displayName = Financials.name
 
   constructor(props) {
     super(props);
-    this.state = { coinPortfolio: [], loading: true };
+    this.state = { coinFinancials: [], loading: true };
 
     fetch('api/portfolio/')
       .then(response => response.json())
       .then(data => {
-        this.setState({ coinPortfolio: data, loading: false });
+        this.setState({ coinFinancials: data, loading: false });
       });
   }
 
-  static renderPortfolioTable(coinPortfolio) {
+  static renderPortfolioTable(coinFinancials) {
     return (
         <Table responsive striped bordered hover>
             <thead>
@@ -32,7 +32,7 @@ export class Portfolio extends Component {
                 </tr>
             </thead>
             <tbody>
-            {coinPortfolio.entries.map(entry =>
+            {coinFinancials.entries.map(entry =>
                 <tr key={entry.symbol}>
                 {<td><a href={""+entry.coinURL+""}>{entry.symbol}</a></td>}
                 <td>{entry.tokensOwned}</td>
@@ -40,7 +40,7 @@ export class Portfolio extends Component {
                 <td>{formatMoney(entry.usdPerToken)}</td>
                 <td>{formatMoney(entry.usdValue)}</td>
                 <td>{entry.btcValue.toFixed(8)}</td>
-                <td>{(entry.usdValue/coinPortfolio.totalUSDValue*100).toFixed(2)}%</td>
+                <td>{(entry.usdValue/coinFinancials.totalUSDValue*100).toFixed(2)}%</td>
                 <td>{formatMoney(entry.marketCap)}</td>
                 </tr>
             )}
@@ -51,8 +51,8 @@ export class Portfolio extends Component {
                     <td rowSpan="1" colSpan="1"></td>
                     <td rowSpan="1" colSpan="1"></td>
                     <td rowSpan="1" colSpan="1"></td>
-                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{formatMoney(coinPortfolio.totalUSDValue)}</strong></td>
-                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{coinPortfolio.totalBTCValue.toFixed(8)}</strong></td>
+                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{formatMoney(coinFinancials.totalUSDValue)}</strong></td>
+                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{coinFinancials.totalBTCValue.toFixed(8)}</strong></td>
                     <td rowSpan="1" colSpan="1"></td>
                     <td rowSpan="1" colSpan="1">
                     </td>
@@ -61,9 +61,9 @@ export class Portfolio extends Component {
                     <td rowSpan="1" colSpan="1"><strong>Investments</strong></td>
                     <td rowSpan="1" colSpan="1"></td><td rowSpan="1" colSpan="1"></td>
                     <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>Total</strong></td>
-                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{formatMoney(coinPortfolio.totalInvestment)}</strong></td>
+                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{formatMoney(coinFinancials.totalInvestment)}</strong></td>
                     <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>ROI</strong></td>
-                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{coinPortfolio.roi.toFixed(2)}</strong></td>
+                    <td styles="text-align: right" rowSpan="1" colSpan="1"><strong>{coinFinancials.roi.toFixed(2)}</strong></td>
                     <td rowSpan="1" colSpan="1"></td></tr>
             </tfoot>
       </Table>
@@ -73,11 +73,10 @@ export class Portfolio extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : Portfolio.renderPortfolioTable(this.state.coinPortfolio);
+      : Financials.renderPortfolioTable(this.state.coinFinancials);
 
     return (
       <div>
-        <h1>Portfolio</h1>
         {contents}
       </div>
     );

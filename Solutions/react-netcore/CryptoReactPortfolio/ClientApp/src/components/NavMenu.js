@@ -23,19 +23,9 @@ export class NavMenu extends Component {
                 <Glyphicon glyph='home' /> Home
               </NavItem>
             </LinkContainer>
-            {/* <LinkContainer to={'/counter'}>
+            <LinkContainer to={'/assets'}>
               <NavItem>
-                <Glyphicon glyph='education' /> Counter
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={'/fetchdata'}>
-              <NavItem>
-                <Glyphicon glyph='th-list' /> Fetch data
-              </NavItem>
-            </LinkContainer> */}
-            <LinkContainer to={'/portfolio'}>
-              <NavItem>
-                <Glyphicon glyph='bitcoin' /> Portfolio
+                <Glyphicon glyph='bitcoin' /> Assets
               </NavItem>
             </LinkContainer>
           </Nav>
