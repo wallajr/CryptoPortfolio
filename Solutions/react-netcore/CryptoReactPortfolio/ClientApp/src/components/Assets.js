@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
 import { Financials } from './Financials';
+import { Trends } from './Trends';
 
 export class Assets extends Component {
     displayName = Assets.name
@@ -29,11 +30,10 @@ export class Assets extends Component {
                         <Financials></Financials>
                     </Tab>
                     <Tab eventKey={2} title="Trends">
-                    Tab 2 content
+                        <Trends></Trends>
                     </Tab>
                 </Tabs>
             </div>
           )
       }
-
 }

@@ -28,6 +28,11 @@ export class NavMenu extends Component {
                 <Glyphicon glyph='bitcoin' /> Assets
               </NavItem>
             </LinkContainer>
+            <LinkContainer to={'/prospects'}>
+              <NavItem>
+                <Glyphicon glyph='search' /> Prospects
+              </NavItem>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
