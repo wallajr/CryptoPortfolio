@@ -17,10 +17,6 @@ namespace CryptoReactPortfolio.Controllers
  
         public TrendsController(CryptoReactPortfolioContext context)
         {
-            if(context.Assets.Count() == 0)
-            {
-                context.Database.EnsureCreated();
-            }
             _context = context;
             Assets = _context.Assets.ToList();
         }

@@ -40,6 +40,7 @@ namespace CryptoReactPortfolio
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                PopoulateDatabase(app);
             }
             else
             {
@@ -68,5 +69,20 @@ namespace CryptoReactPortfolio
                 }
             });
         }
+
+    private static void PopoulateDatabase(IApplicationBuilder app)
+    {
+        using (var serviceScope = app.ApplicationServices
+            .GetRequiredService<IServiceScopeFactory>()
+            .CreateScope())
+        {
+            using (var context = serviceScope.ServiceProvider.GetService<CryptoReactPortfolioContext>())
+            {
+                // TODO - What is difference in Migrate() and EnsureCreated()
+                // context.Database.Migrate();
+                context.Database.EnsureCreated();
+            }
+        }
+    }
     }
 }
