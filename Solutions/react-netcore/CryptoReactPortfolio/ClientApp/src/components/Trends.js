@@ -86,13 +86,27 @@ export class Trends extends Component {
             <tbody>
             {coinTrends.entries.map(entry =>
                 <tr key={entry.symbol}>
-                    <td><a href={""+entry.coinURL+""}>{entry.symbol}</a></td>
-                    <td>{entry.oneHourPercentage}%</td>
-                    <td>{entry.sixHoursPercentage}%</td>
-                    <td>{entry.twelveHoursPercentage}%</td>
-                    <td>{entry.twentyFourHoursPercentage}%</td>
-                    <td>{entry.sevenDaysPercentage}%</td>
-                    <td>{entry.thirtyDaysPercentage}%</td>
+                    <td>
+                      <a href={""+entry.coinURL+""}>{entry.symbol}</a>
+                    </td>
+                    <td style={{color: entry.oneHourPercentage > 0 ? 'green' : 'red'}}>
+                      {entry.oneHourPercentage}%
+                    </td>
+                    <td style={{color: entry.sixHoursPercentage > 0 ? 'green' : 'red'}}>
+                      {entry.sixHoursPercentage}%
+                    </td>
+                    <td style={{color: entry.twelveHoursPercentage > 0 ? 'green' : 'red'}}>
+                      {entry.twelveHoursPercentage}%
+                    </td>
+                    <td style={{color: entry.twentyFourHoursPercentage > 0 ? 'green' : 'red'}}>
+                      {entry.twentyFourHoursPercentage}%
+                    </td>
+                    <td style={{color: entry.sevenDaysPercentage > 0 ? 'green' : 'red'}}>
+                      {entry.sevenDaysPercentage}%
+                    </td>
+                    <td style={{color: entry.thirtyDaysPercentage > 0 ? 'green' : 'red'}}>
+                      {entry.thirtyDaysPercentage}%
+                    </td>
                 </tr>
             )}
             </tbody>
